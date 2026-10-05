@@ -1,0 +1,34 @@
+name: Java Tests
+
+on:
+  push:
+    paths:
+      - 'src/java/**'
+      - 'tests/java/**'
+      - 'scripts/test-java.sh'
+      - '.github/workflows/test-java.yml'
+  pull_request:
+    paths:
+      - 'src/java/**'
+      - 'tests/java/**'
+      - 'scripts/test-java.sh'
+      - '.github/workflows/test-java.yml'
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up JDK
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+          cache: 'maven'
+
+      - name: Run Java tests
+        run: |
+          chmod +x scripts/test-java.sh
+          ./scripts/test-java.sh

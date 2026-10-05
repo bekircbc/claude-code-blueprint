@@ -1,0 +1,39 @@
+name: Symfony Tests
+
+on:
+  push:
+    paths:
+      - 'src/symfony/**'
+      - 'tests/symfony/**'
+      - 'scripts/test-symfony.sh'
+      - '.github/workflows/test-symfony.yml'
+  pull_request:
+    paths:
+      - 'src/symfony/**'
+      - 'tests/symfony/**'
+      - 'scripts/test-symfony.sh'
+      - '.github/workflows/test-symfony.yml'
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.2'
+          extensions: ctype, iconv, json, mbstring
+          coverage: none
+
+      - name: Install Composer dependencies
+        run: |
+          cd src/symfony
+          composer install --prefer-dist --no-progress
+
+      - name: Run Symfony tests
+        run: |
+          chmod +x scripts/test-symfony.sh
+          ./scripts/test-symfony.sh

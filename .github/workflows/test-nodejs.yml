@@ -1,0 +1,37 @@
+name: Node.js Tests
+
+on:
+  push:
+    paths:
+      - 'src/nodejs/**'
+      - 'tests/nodejs/**'
+      - 'scripts/test-nodejs.sh'
+      - '.github/workflows/test-nodejs.yml'
+  pull_request:
+    paths:
+      - 'src/nodejs/**'
+      - 'tests/nodejs/**'
+      - 'scripts/test-nodejs.sh'
+      - '.github/workflows/test-nodejs.yml'
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+          cache-dependency-path: 'src/nodejs/package-lock.json'
+
+      - name: Install dependencies
+        run: npm --prefix src/nodejs ci
+
+      - name: Run Node.js tests
+        run: |
+          chmod +x scripts/test-nodejs.sh
+          ./scripts/test-nodejs.sh
